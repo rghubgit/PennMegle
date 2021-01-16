@@ -1,0 +1,10 @@
+<div style="display: flex">
+  <h1>Edit User</h1>
+  <div style="flex: 1"></div>
+  <%= button_to "Cancel", @user, method: :get, class: "btn btn-outline-secondary", style: "width: 75px; margin-right: 10px" %>
+</div>
+
+<div style="display: flex; justify-content: center">
+  <%= render 'form', user: @user %>
+</div>
+

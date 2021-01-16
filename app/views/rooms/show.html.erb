@@ -1,0 +1,96 @@
+<!-- Video Display -->
+<div id="videos" style="position: relative;
+    width: 600px;
+    height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex
+    ">
+
+    <div id="subscriber" style="position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;"></div>
+
+    <div id="publisher" style="position: absolute;
+    width: 360px;
+    height: 240px;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+    border: 3px solid white;
+    border-radius: 3px;"></div>
+</div>
+
+<!-- User subscription stream -->
+<% begin %>
+  <%# @opentok.streams.all(@room.session_id)  if @opentok.streams.all(@room.session_id) %>
+  <% @streams.each do |user| %>
+    <div style="display: flex; align-items: center; border-top: 1px solid #bbb; padding-top: 5px; margin-top: 5px">
+      <div style="margin-right: 20px">
+        <% if user.profile_picture.attached? %>
+          <%= image_tag user.profile_picture, :style => "width: 50px; height: 50px; object-fit: cover; border-radius: 50px" %>
+        <% else %>
+          <%= image_tag "default_pic.jpg", :style => "width: 50px; height: 50px; object-fit: cover; border-radius: 50px" %>
+        <% end %>
+      </div>
+      <div><%= user.username %></div>
+      <div style="flex: 1"></div>
+      <%= button_to "Show", user, method: :get, class: "btn btn-outline-primary", style: "margin-right: 10px" %>
+    </div>
+  <% end %>
+<% rescue %>
+<% ensure %>
+<% end %>
+
+
+<script>
+  var apiKey = "<%= Rails.application.credentials.vonage[:api_key] %>";
+  var sessionId = "<%= @room.session_id %>";
+  var token = "<%= @token %>";
+
+  // Handling all of our errors here by alerting them
+  function handleError(error) {
+    if (error) {
+      alert(error.message);
+    }
+  }
+
+  initializeSession();
+
+  function initializeSession() {
+    var session = OT.initSession(apiKey, sessionId);
+
+    // Subscribe to a newly created stream
+    session.on('streamCreated', function(event) {
+      session.subscribe(event.stream, 'subscriber', {
+        insertMode: 'append',
+        width: '100%',
+        height: '100%'
+      }, handleError);
+    });
+
+    // Create a publisher
+    var publisher = OT.initPublisher('publisher', {
+      name: "<%= current_user.username %>",
+      style: {
+        insertMode: 'append',
+        width: '100%',
+        height: '100%'
+      }
+    }, handleError);
+
+    // Connect to the session
+    session.connect(token, function(error) {
+      // If the connection is successful, initialize a publisher and publish to the session
+      if (error) {
+        handleError(error);
+      } else {
+        session.publish(publisher, handleError);
+      }
+    });
+  }
+</script>
+

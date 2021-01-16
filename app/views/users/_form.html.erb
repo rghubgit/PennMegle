@@ -1,0 +1,50 @@
+<%= form_with(model: user, local: true) do |form| %>
+
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :username %>
+    <%= form.text_field :username, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :bio %>
+    <%= form.text_area :bio, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :profile_picture, class: "form-label" %>
+    <%= form.file_field :profile_picture, class: "form-control" %>
+  </div>
+
+  <!-- <div class="field">
+    <%= form.label :room_id %>
+    <%= form.text_field :room_id %>
+  </div> -->
+
+
+
+  <div class="actions">
+    <%= form.submit "Done", class: "btn btn-outline-primary", style: "width: 75px" %>
+  </div>
+<% end %>

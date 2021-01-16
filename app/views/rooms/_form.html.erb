@@ -1,0 +1,33 @@
+<%= form_with(model: [room.channel, room], local: true) do |form| %>
+  <% if room.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
+
+      <ul>
+      <% room.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :channel_id %>
+    <%= form.text_field :channel_id, style: "width: 400px", class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Done", class: "btn btn-primary", style: "width: 75px" %>
+  </div>
+
+<% end %>
